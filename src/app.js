@@ -1,10 +1,21 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
-var bodyParser = require("body-parser");
+const router = require("./routes/post");
+const bodyParser = require("body-parser");
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 require("dotenv").config();
 
-app.use(bodyParser.json());
+mongoose.connect(process.env.MONGO_URI).then((e) => {
+    console.log("Mongo connection established.");
+});
+
+app.use("/api", router);
 
 app.all("*", (req, res) => {
     res.status(404).send("Not Found.");
